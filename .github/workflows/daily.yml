@@ -16,18 +16,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create daily activity
+      - name: Create random daily commits
         run: |
           mkdir -p daily-log
-          echo "Activity: $(date -u '+%Y-%m-%d')" >> daily-log/activity.txt
 
-      - name: Commit changes
-        run: |
-          git config user.name "JitendraSri"
-          git config user.email "talabattulajitendrasri@gmail.com"
+          # Random number between 1 and 10
+          COMMITS=$((RANDOM % 10 + 1))
 
-          git add daily-log/activity.txt
+          echo "Today's commits: $COMMITS"
 
-          git commit -m "Daily activity $(date -u '+%Y-%m-%d')" || exit 0
+          for ((i=1; i<=COMMITS; i++))
+          do
+            echo "Activity $i - $(date -u '+%Y-%m-%d %H:%M:%S')" >> daily-log/activity.txt
+
+            git config user.name "JitendraSri"
+            git config user.email "talabattulajitendrasri@gmail.com"
+
+            git add daily-log/activity.txt
+            git commit -m "Daily activity $i - $(date -u '+%Y-%m-%d')"
+
+            sleep 2
+          done
 
           git push
